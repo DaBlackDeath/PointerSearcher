@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -33,6 +37,9 @@ namespace PointerSearcher
         private List<List<IReverseOrderPath>> result;
         private CancellationTokenSource cancel = null;
         private double progressTotal;
+
+        bool savedsearch = false;
+
         private async void buttonRead_Click(object sender, EventArgs e)
         {
             SetProgressBar(0);
@@ -173,19 +180,23 @@ namespace PointerSearcher
 
         private void dataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            if (e.ColumnIndex == 0)
-            {
-                OpenFileDialog ofd = new OpenFileDialog();
-                ofd.InitialDirectory = @"";
-                //[ファイルの種類]に表示される選択肢を指定する
-                //指定しないとすべてのファイルが表示される
-                ofd.Filter = "NoexsDumpFile(*.dmp)|*.dmp|All Files(*.*)|*.*";
-                ofd.FilterIndex = 1;
-                ofd.Title = "select Noexs dump file";
-                if (ofd.ShowDialog() == DialogResult.OK)
+            if (savedsearch == false)
                 {
-                    dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = ofd.FileName;
+                if (e.ColumnIndex == 0)
+                {
+                    OpenFileDialog ofd = new OpenFileDialog();
+                    ofd.InitialDirectory = @"";
+                    //[ファイルの種類]に表示される選択肢を指定する
+                    //指定しないとすべてのファイルが表示される
+                    ofd.Filter = "NoexsDumpFile(*.dmp)|*.dmp|All Files(*.*)|*.*";
+                    ofd.FilterIndex = 1;
+                    ofd.Title = "select Noexs dump file";
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = ofd.FileName;
+                    }
                 }
+            
             }
         }
 
@@ -409,5 +420,52 @@ namespace PointerSearcher
                 cancel.Cancel();
             }
         }
+        
+        
+        // new : Menu for save and loading grid data
+        
+        private void SaveDataGridViewToCSV(string filename)
+        {
+            dataGridView1.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            dataGridView1.SelectAll();
+            DataObject dataObject = dataGridView1.GetClipboardContent();
+            File.WriteAllText(filename, dataObject.GetText(TextDataFormat.CommaSeparatedValue));
+        }
+      
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.DefaultExt = "psearch";
+            saveFileDialog1.Filter = "PointerSearch files (*.psearch)|*.psearch|All files (*.*)|*.*";
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                SaveDataGridViewToCSV(saveFileDialog1.FileName);
+            }   
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Filter = "PointerSearch files (*.psearch)|*.psearch|All files (*.*)|*.*";
+            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                savedsearch = true;
+                dataGridView1.Rows.Clear();
+                using (FileStream file = new FileStream(openFileDialog1.FileName, FileMode.Open, FileAccess.Read, FileShare.Read, 4096))
+                using (StreamReader reader = new StreamReader(file))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        var fields = reader.ReadLine().Split(',');
+                        
+                            dataGridView1.Rows.Add(fields);
+                       
+                    }
+                }
+            }
+            savedsearch = false;
+        }
+
     }
 }
