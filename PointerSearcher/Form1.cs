@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -39,7 +36,6 @@ namespace PointerSearcher
         private double progressTotal;
 
         bool savedsearch = false;
-
         private async void buttonRead_Click(object sender, EventArgs e)
         {
             SetProgressBar(0);
@@ -48,7 +44,7 @@ namespace PointerSearcher
                 buttonRead.Enabled = false;
 
 
-                IDumpDataReader reader = CreateDumpDataReader(dataGridView1.Rows[0]);
+                IDumpDataReader reader = CreateDumpDataReader(dataGridView1.Rows[0], false);
                 if (reader == null)
                 {
                     throw new Exception("Invalid input" + Environment.NewLine + "Check highlighted cell");
@@ -67,7 +63,7 @@ namespace PointerSearcher
 
                 buttonSearch.Enabled = true;
             }
-            catch (System.OperationCanceledException ex)
+            catch (System.OperationCanceledException)
             {
                 SetProgressBar(0);
                 System.Media.SystemSounds.Asterisk.Play();
@@ -134,7 +130,7 @@ namespace PointerSearcher
                     buttonNarrowDown.Enabled = true;
                 }
             }
-            catch (System.OperationCanceledException ex)
+            catch (System.OperationCanceledException)
             {
                 SetProgressBar(0);
                 System.Media.SystemSounds.Asterisk.Play();
@@ -181,7 +177,7 @@ namespace PointerSearcher
         private void dataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
             if (savedsearch == false)
-                {
+            {
                 if (e.ColumnIndex == 0)
                 {
                     OpenFileDialog ofd = new OpenFileDialog();
@@ -196,7 +192,6 @@ namespace PointerSearcher
                         dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = ofd.FileName;
                     }
                 }
-            
             }
         }
 
@@ -215,7 +210,7 @@ namespace PointerSearcher
                     {
                         continue;
                     }
-                    IDumpDataReader reader = CreateDumpDataReader(row);
+                    IDumpDataReader reader = CreateDumpDataReader(row, true);
                     if (reader != null)
                     {
                         long target = Convert.ToInt64(row.Cells[5].Value.ToString(), 16);
@@ -242,7 +237,7 @@ namespace PointerSearcher
                 SetProgressBar(100);
                 System.Media.SystemSounds.Asterisk.Play();
             }
-            catch (System.OperationCanceledException ex)
+            catch (System.OperationCanceledException)
             {
                 SetProgressBar(0);
                 System.Media.SystemSounds.Asterisk.Play();
@@ -288,7 +283,7 @@ namespace PointerSearcher
                 row.Cells[i].Style.BackColor = Color.White;
             }
         }
-        private IDumpDataReader CreateDumpDataReader(DataGridViewRow row)
+        private IDumpDataReader CreateDumpDataReader(DataGridViewRow row, bool allowUnknownTarget)
         {
             bool canCreate = true;
             String path = "";
@@ -381,8 +376,13 @@ namespace PointerSearcher
                 row.Cells[4].Style.BackColor = Color.Red;
                 canCreate = false;
             }
-            if ((target < heapStart) || (heapEnd < target))
+            if (allowUnknownTarget && (target == 0))
             {
+                //if target address is set to 0,it means unknown address.
+            }
+            else if ((target < heapStart) || (heapEnd <= target))
+            {
+                //if not unknown,target should be located at heap region
                 row.Cells[5].Style.BackColor = Color.Red;
                 canCreate = false;
             }
@@ -420,10 +420,9 @@ namespace PointerSearcher
                 cancel.Cancel();
             }
         }
-        
-        
+
         // new : Menu for save and loading grid data
-        
+
         private void SaveDataGridViewToCSV(string filename)
         {
             dataGridView1.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -431,7 +430,7 @@ namespace PointerSearcher
             DataObject dataObject = dataGridView1.GetClipboardContent();
             File.WriteAllText(filename, dataObject.GetText(TextDataFormat.CommaSeparatedValue));
         }
-      
+
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
@@ -441,7 +440,7 @@ namespace PointerSearcher
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 SaveDataGridViewToCSV(saveFileDialog1.FileName);
-            }   
+            }
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -458,9 +457,9 @@ namespace PointerSearcher
                     while (!reader.EndOfStream)
                     {
                         var fields = reader.ReadLine().Split(',');
-                        
-                            dataGridView1.Rows.Add(fields);
-                       
+
+                        dataGridView1.Rows.Add(fields);
+
                     }
                 }
             }
