@@ -51,8 +51,23 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton4 = new System.Windows.Forms.RadioButton();
+            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.label4 = new System.Windows.Forms.Label();
+            this.BOX_value = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.CodeBuilder_BOX = new System.Windows.Forms.RichTextBox();
+            this.working_BOX = new System.Windows.Forms.TextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.radio_hex = new System.Windows.Forms.RadioButton();
+            this.radio_dec = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonRead
@@ -236,22 +251,160 @@
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.loadToolStripMenuItem.Text = "Load";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(7, 14);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(45, 17);
+            this.radioButton1.TabIndex = 14;
+            this.radioButton1.Text = "8 bit";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(58, 14);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(51, 17);
+            this.radioButton2.TabIndex = 15;
+            this.radioButton2.Text = "16 bit";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // radioButton4
+            // 
+            this.radioButton4.AutoSize = true;
+            this.radioButton4.Location = new System.Drawing.Point(180, 35);
+            this.radioButton4.Name = "radioButton4";
+            this.radioButton4.Size = new System.Drawing.Size(51, 17);
+            this.radioButton4.TabIndex = 17;
+            this.radioButton4.Text = "64 bit";
+            this.radioButton4.UseVisualStyleBackColor = true;
+            this.radioButton4.Visible = false;
+            // 
+            // radioButton3
+            // 
+            this.radioButton3.AutoSize = true;
+            this.radioButton3.Checked = true;
+            this.radioButton3.Location = new System.Drawing.Point(115, 14);
+            this.radioButton3.Name = "radioButton3";
+            this.radioButton3.Size = new System.Drawing.Size(51, 17);
+            this.radioButton3.TabIndex = 16;
+            this.radioButton3.TabStop = true;
+            this.radioButton3.Text = "32 bit";
+            this.radioButton3.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 16);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(34, 13);
+            this.label4.TabIndex = 18;
+            this.label4.Text = "Value";
+            // 
+            // BOX_value
+            // 
+            this.BOX_value.Location = new System.Drawing.Point(42, 11);
+            this.BOX_value.Name = "BOX_value";
+            this.BOX_value.Size = new System.Drawing.Size(100, 20);
+            this.BOX_value.TabIndex = 19;
+            this.BOX_value.Text = "999";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(450, 490);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(208, 30);
+            this.button1.TabIndex = 20;
+            this.button1.Text = "Export Results as Code List";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // CodeBuilder_BOX
+            // 
+            this.CodeBuilder_BOX.Location = new System.Drawing.Point(13, 639);
+            this.CodeBuilder_BOX.Name = "CodeBuilder_BOX";
+            this.CodeBuilder_BOX.Size = new System.Drawing.Size(646, 133);
+            this.CodeBuilder_BOX.TabIndex = 21;
+            this.CodeBuilder_BOX.Text = "";
+            this.CodeBuilder_BOX.Visible = false;
+            // 
+            // working_BOX
+            // 
+            this.working_BOX.Location = new System.Drawing.Point(12, 778);
+            this.working_BOX.Name = "working_BOX";
+            this.working_BOX.Size = new System.Drawing.Size(645, 20);
+            this.working_BOX.TabIndex = 22;
+            this.working_BOX.Visible = false;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.radioButton4);
+            this.groupBox1.Controls.Add(this.radioButton3);
+            this.groupBox1.Controls.Add(this.radioButton2);
+            this.groupBox1.Controls.Add(this.radioButton1);
+            this.groupBox1.Location = new System.Drawing.Point(14, 484);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(179, 36);
+            this.groupBox1.TabIndex = 23;
+            this.groupBox1.TabStop = false;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.radio_dec);
+            this.groupBox2.Controls.Add(this.radio_hex);
+            this.groupBox2.Controls.Add(this.BOX_value);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Location = new System.Drawing.Point(199, 484);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(245, 36);
+            this.groupBox2.TabIndex = 24;
+            this.groupBox2.TabStop = false;
+            // 
+            // radio_hex
+            // 
+            this.radio_hex.AutoSize = true;
+            this.radio_hex.Location = new System.Drawing.Point(148, 14);
+            this.radio_hex.Name = "radio_hex";
+            this.radio_hex.Size = new System.Drawing.Size(42, 17);
+            this.radio_hex.TabIndex = 20;
+            this.radio_hex.Text = "hex";
+            this.radio_hex.UseVisualStyleBackColor = true;
+            // 
+            // radio_dec
+            // 
+            this.radio_dec.AutoSize = true;
+            this.radio_dec.Checked = true;
+            this.radio_dec.Location = new System.Drawing.Point(196, 14);
+            this.radio_dec.Name = "radio_dec";
+            this.radio_dec.Size = new System.Drawing.Size(43, 17);
+            this.radio_dec.TabIndex = 21;
+            this.radio_dec.TabStop = true;
+            this.radio_dec.Text = "dec";
+            this.radio_dec.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(674, 484);
+            this.ClientSize = new System.Drawing.Size(674, 531);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.working_BOX);
+            this.Controls.Add(this.CodeBuilder_BOX);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.label3);
@@ -268,10 +421,15 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "PointerSearcher 0.04a";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "PointerSearcher 0.04b";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -302,6 +460,19 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton radioButton4;
+        private System.Windows.Forms.RadioButton radioButton3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox BOX_value;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.RichTextBox CodeBuilder_BOX;
+        private System.Windows.Forms.TextBox working_BOX;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton radio_dec;
+        private System.Windows.Forms.RadioButton radio_hex;
     }
 }
 

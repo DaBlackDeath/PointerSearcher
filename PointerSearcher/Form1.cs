@@ -27,6 +27,7 @@ namespace PointerSearcher
 
             result = new List<List<IReverseOrderPath>>();
         }
+        public string bsize; 
         private PointerInfo info;
         private int maxDepth;
         private int maxOffsetNum;
@@ -425,6 +426,7 @@ namespace PointerSearcher
 
         private void SaveDataGridViewToCSV(string filename)
         {
+
             dataGridView1.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             dataGridView1.SelectAll();
             DataObject dataObject = dataGridView1.GetClipboardContent();
@@ -466,5 +468,122 @@ namespace PointerSearcher
             savedsearch = false;
         }
 
+        private string RemoveUnwantedChar(string input)
+        {
+            string correctString = "";
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (char.IsControl(input[i]) || input[i] == '+' || input[i] == '-')
+                    correctString += input[i] + ".";
+            }
+            return correctString;
+        }
+        private void convertdoublebracket()
+
+        {
+            do
+            {
+                textBox1.Text = textBox1.Text.Replace("]]", "] +00]" + " ");
+                textBox1.Text = textBox1.Text.Replace("] ]", "]]");
+            }
+            while (textBox1.Text.Contains("]]"));
+        }
+        private void bsize_check()
+        {
+            if (radioButton1.Checked)
+            {
+                bsize = "1";
+            }
+            else if (radioButton2.Checked)
+            {
+                bsize = "2";
+            }
+            else if (radioButton3.Checked)
+            {
+                bsize = "4";
+            }
+            else if (radioButton4.Checked)
+            {
+                bsize = "8";
+            }
+
+
+        }   
+        private void makecode(int cnumber)
+        {
+            string[] pparse = working_BOX.Text.Replace("]", "").ToUpper().Replace(" ", "").Split(new Char[] { '+', '-' });
+            string pparseA = "".PadRight(8 - pparse[1].Length, '0') + pparse[1];
+            string pparse_O = "".PadRight(8 - pparse[2].Length, '0') + pparse[2];
+            string pparseL = "".PadRight(8 - pparse[pparse.Length - 1].Length, '0') + pparse[pparse.Length - 1];
+
+            CodeBuilder_BOX.Text += "[Test Code " + cnumber + "]" + "\n";
+            CodeBuilder_BOX.Text += "580F0000 " + pparseA + "\n";
+
+            if (pparse.Length > 3)
+            {
+                int ppnumber = pparse.Length - 2;
+                int ppncounter = 2;
+                while (ppnumber > 1)
+                {
+                    CodeBuilder_BOX.Text += "580F1000 " + "".PadRight(8 - pparse[ppncounter].Length, '0') + pparse[ppncounter] + "\n";
+                    ppnumber = ppnumber - 1;
+                    ppncounter = ppncounter + 1;
+                }
+            }
+            CodeBuilder_BOX.Text += "780F0000 " + pparseL + "\n";
+
+            if (radio_dec.Checked == true)
+            {
+               
+                CodeBuilder_BOX.Text += "6" + bsize + "0F0000 " + "00000000 " + Convert.ToUInt32(BOX_value.Text).ToString("X8") + "\n" + Environment.NewLine;
+            }
+            else
+            {
+                CodeBuilder_BOX.Text += "6" + bsize + "0F0000 " + "00000000 " + "".PadRight(8 - BOX_value.Text.Length, '0') + BOX_value.Text.ToUpper() + "\n" + Environment.NewLine;
+            }
+
+            
+        }
+        private void exportcode()
+        {
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "CodeBuilder Text Files (*.txt)|*.txt";
+            saveDialog.DefaultExt = "txt";
+            saveDialog.AddExtension = true;
+            DialogResult result = saveDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                String fileName = saveDialog.FileName;
+                System.IO.File.WriteAllLines(
+                    fileName,
+                    CodeBuilder_BOX.Lines);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            CodeBuilder_BOX.Clear();
+            if (BOX_value.Text != string.Empty & textBox1.Text.Contains("main"))
+            {
+                bsize_check();
+                convertdoublebracket();
+
+                for (int i = 0; i < textBox1.Lines.Length; i++)
+                {
+                    if (textBox1.Lines[i] != string.Empty)
+                    {
+                        RemoveUnwantedChar(textBox1.Lines[i]);
+                        working_BOX.Text = textBox1.Lines[i];
+                        makecode(i + 1);
+                    }
+                }
+                exportcode();
+            }
+            else
+            {
+                MessageBox.Show("Please enter a value in field or no Results found");
+            }
+        }
     }
 }
